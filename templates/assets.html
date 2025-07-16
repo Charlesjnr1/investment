@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assets | MyCryptoWallet</title>
+  <style>
+    :root {
+      --bg: #0e1a2b;
+      --card: #162a45;
+      --text: #e8f0fa;
+      --accent: #fcd535;
+      --hover: #1f354f;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      background: var(--card);
+      padding: 1rem 2rem;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--accent);
+      border-bottom: 1px solid #223b5d;
+    }
+    main {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    .card {
+      background: var(--card);
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #29415e;
+      text-align: left;
+    }
+    th {
+      background-color: var(--hover);
+      color: var(--accent);
+    }
+    tr:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+    @media (max-width: 600px) {
+      th, td {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>💼 Your Crypto Assets</header>
+  <main>
+    <section class="card">
+      <h2 style="margin-bottom: 1rem; color: var(--accent);">Live Asset Overview</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Coin</th>
+            <th>Holdings</th>
+            <th>Price (USD)</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody id="assetTable">
+          <tr><td colspan="4">Loading...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    const holdings = {
+      bitcoin: 0.35,
+      ethereum: 1.1,
+      tether: 500
+    };
+
+    async function loadAssets() {
+      const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether&vs_currencies=usd");
+      const prices = await res.json();
+
+      const table = document.getElementById("assetTable");
+      table.innerHTML = "";
+
+      Object.keys(holdings).forEach(coin => {
+        const price = prices[coin].usd;
+        const amount = holdings[coin];
+        const value = (amount * price).toFixed(2);
+        const name = coin.charAt(0).toUpperCase() + coin.slice(1);
+        table.innerHTML += `
+          <tr>
+            <td>${name}</td>
+            <td>${amount}</td>
+            <td>$${price.toLocaleString()}</td>
+            <td>$${value.toLocaleString()}</td>
+          </tr>
+        `;
+      });
+    }
+
+    loadAssets();
+  </script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Transaction History | MyCryptoWallet</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f1f5f9;
+      --accent: #fcd535;
+      --shadow: rgba(0, 0, 0, 0.3);
+      --table-border: #334155;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--card);
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 1.8rem;
+      color: var(--accent);
+      border-bottom: 1px solid var(--table-border);
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px var(--shadow);
+    }
+
+    h2 {
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: var(--accent);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--table-border);
+    }
+
+    th {
+      color: var(--accent);
+      cursor: pointer;
+    }
+
+    tr:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      td {
+        padding: 0.6rem;
+        border-bottom: 1px solid var(--table-border);
+      }
+
+      td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        display: block;
+        margin-bottom: 0.25rem;
+        color: var(--accent);
+      }
+
+      th {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>📑 Transaction History</header>
+  <main>
+    <div class="card">
+      <h2>Recent Transactions</h2>
+      <input type="text" id="searchInput" placeholder="Search by coin or type...">
+      <table id="transactionTable">
+        <thead>
+          <tr>
+            <th onclick="sortTable(0)">Date</th>
+            <th onclick="sortTable(1)">Type</th>
+            <th onclick="sortTable(2)">Amount</th>
+            <th onclick="sortTable(3)">Coin</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td data-label="Date">2025-06-17</td><td data-label="Type">Buy</td><td data-label="Amount">$1,200</td><td data-label="Coin">BTC</td></tr>
+          <tr><td data-label="Date">2025-06-15</td><td data-label="Type">Withdraw</td><td data-label="Amount">$500</td><td data-label="Coin">ETH</td></tr>
+          <tr><td data-label="Date">2025-06-12</td><td data-label="Type">Deposit</td><td data-label="Amount">$1,000</td><td data-label="Coin">USDT</td></tr>
+          <tr><td data-label="Date">2025-06-10</td><td data-label="Type">Sell</td><td data-label="Amount">$700</td><td data-label="Coin">BNB</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    // Search Filter
+    document.getElementById('searchInput').addEventListener('keyup', function () {
+      const filter = this.value.toLowerCase();
+      const rows = document.querySelectorAll('#transactionTable tbody tr');
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+      });
+    });
+
+    // Sort Table
+    function sortTable(colIndex) {
+      const table = document.getElementById('transactionTable');
+      const rows = Array.from(table.rows).slice(1);
+      const sorted = rows.sort((a, b) => {
+        const valA = a.cells[colIndex].innerText.toLowerCase();
+        const valB = b.cells[colIndex].innerText.toLowerCase();
+        return valA.localeCompare(valB, undefined, {numeric: true});
+      });
+      rows.forEach(row => table.tBodies[0].appendChild(row));
+    }
+  </script>
+</body>
+</html>

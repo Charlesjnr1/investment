@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cryptocurrency Market Tracker</title>
+
+  <!-- Bootstrap CSS (from static folder) -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styl.css') }}">
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="bg-dark text-white py-4 mb-4">
+    <div class="container text-center">
+      <h1>Cryptocurrency Market</h1>
+    </div>
+  </header>
+
+  <!-- Search + Table -->
+  <div class="container">
+    <div class="input-group mb-4">
+      <input type="text" id="searchInput" class="form-control" placeholder="Search cryptocurrencies...">
+      <div class="input-group-append">
+        <button class="btn btn-primary" type="button" id="searchButton">Search</button>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Logo</th>
+            <th>Name</th>
+            <th>Symbol</th>
+            <th>Price</th>
+            <th>Price Change</th>
+            <th>24h Volume</th>
+            <th>Market Cap</th>
+          </tr>
+        </thead>
+        <tbody id="cryptoTable">
+          <!-- JavaScript will populate this table -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white py-4 mt-4">
+    <div class="container text-center">
+      <p>&copy; 2025 Cryptocurrency Tracker</p>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='popper.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>

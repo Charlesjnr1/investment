@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MyCryptoWallet Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <style>
+    :root {
+  --bg: #10151f;
+  --card: #16202e;
+  --hover: #1d293b;
+  --text: #e6edf3;
+  --accent: #fcd535;
+  --highlight: #3498db;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+header {
+  background: #0d121a;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 3rem;
+  border-bottom: 1px solid #2c3e50;
+}
+
+.menu-toggle {
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+header h1,
+.logo {
+  color: var(--accent);
+  font-weight: bold;
+  padding: 1rem 2rem;
+}
+
+main {
+  display: flex;
+  flex: 1;
+}
+
+/* Sidebar Styles */
+nav {
+  background: var(--card);
+  padding: 1.5rem 1rem;
+  width: 230px;
+  min-height: calc(100vh - 60px);
+  transition: transform 0.3s ease;
+}
+
+nav.collapsed {
+  transform: translateX(-100%);
+  position: absolute;
+  z-index: 999;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+nav li {
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+}
+
+nav li a {
+  display: block;
+  padding: 0.8rem 1rem;
+  color: var(--text);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background 0.3s, color 0.3s;
+}
+
+nav li a:hover {
+  background: var(--hover);
+  color: var(--accent);
+}
+
+nav li.active a {
+  background: var(--highlight);
+  color: #fff;
+}
+
+.logo {
+  flex: 2;
+  font-weight: bold;
+  font-size: 1.4rem;
+  Right: 1.4rem;
+}
+
+.dashboard {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.card {
+    background: linear-gradient(145deg, #1e293b, #0f172a);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    color: #fff;
+    margin: 1rem 0;
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .card-header h2 {
+    font-size: 1.5rem;
+    color: #22d3ee;
+  }
+  #coin-selector {
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: none;
+    background: #1e293b;
+    color: #fff;
+    font-weight: bold;
+  }
+  .chart-container {
+    position: relative;
+    height: 350px;
+    margin-bottom: 1rem;
+  }
+  .price-feed {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #10b981;
+  }
+.tabs {
+      padding: 1rem 2rem;
+      display: flex;
+      gap: 1rem;
+      background-color: var(--bg-dark);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .tabs button {
+      background: transparent;
+      border: 2px solid var(--hover);
+      color: var(--text);
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .tabs button.active {
+      background-color: var(--primary);
+      color: #000;
+      border-color: var(--primary);
+    }
+
+    .content {
+      padding: 2rem;
+    }
+
+    .tab {
+      display: none;
+    }
+
+    .tab.active {
+      display: block;
+    }
+
+    .widget-box {
+      background-color: var(--bg-panel);
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    iframe {
+      width: 100%;
+      height: 500px;
+      border: none;
+      border-radius: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+      .main {
+        margin-left: 0;
+      }
+    }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--text);
+}
+
+th,
+td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #2c3e50;
+}
+
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+footer {
+  background: #0d121a;
+  color: #888;
+  text-align: center;
+  padding: 1rem;
+}
+
+@media (max-width: 768px) {
+  main {
+    flex-direction: column;
+  }
+
+  nav {
+    width: 100%;
+    min-height: auto;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="menu-toggle" onclick="toggleSidebar()">☰</div>
+    <div class="logo">HalalVest</div>
+    <h2>Welcome back, <strong>{{ user.name.split()[0] if user.name else 'User' }}</strong></h2>
+    <img src="{{ url_for('static', filename='uploads/' + (user.profile_pic if user.profile_pic else 'avatar-1.jpg')) }}" alt="User Avatar" class="avatar" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;" />
+
+  </header>
+  <main>
+    <nav id="sidebar">
+      <ul>
+        
+        <li class="active"><a href="{{ url_for('dashboard') }}"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+        <li><a href="{{ url_for('assets') }}"><i class="fas fa-coins"></i> Assets</a></li>
+        <li><a href="{{ url_for('deposit') }}"><i class="fas fa-wallet"></i> Deposit</a></li>
+        <li><a href="{{ url_for('buy') }}"><i class="fas fa-shopping-cart"></i> Buy Bitcoin</a></li>
+        <li><a href="{{ url_for('withdraw') }}"><i class="fas fa-paper-plane"></i> Withdrawal</a></li>
+        <li><a href="{{ url_for('mining') }}"><i class="fas fa-microchip"></i> Mining</a></li>
+        <li><a href="{{ url_for('portfolio') }}"><i class="fas fa-pie-chart"></i> Portfolio</a></li>
+        <li><a href="{{ url_for('transactions') }}"><i class="fas fa-clock-rotate-left"></i> Transactions</a></li>
+        <li><a href="{{ url_for('tools') }}"><i class="fas fa-tools"></i> Tools</a></li>
+        <li><a href="{{ url_for('settings') }}"><i class="fas fa-cog"></i> Settings</a></li>
+        <li><a href="{{ url_for('support') }}"><i class="fas fa-headset"></i> Support</a></li>
+        
+        
+      </ul>
+      
+    </nav>
+    
+    
+    <div class="dashboard">
+      <section id="wallet" class="section active">
+        <div class="card">
+          <div class="card-header">
+            <h2>Live Crypto Chart</h2>
+            <select id="coin-selector">
+              <option value="bitcoin">Bitcoin (BTC)</option>
+              <option value="ethereum">Ethereum (ETH)</option>
+              <option value="tether">Tether (USDT)</option>
+              <option value="binancecoin">BNB (BNB)</option>
+              <option value="solana">Solana (SOL)</option>
+              <option value="ripple">XRP (XRP)</option>
+              <option value="cardano">Cardano (ADA)</option>
+              <option value="dogecoin">Dogecoin (DOGE)</option>
+              <option value="toncoin">Toncoin (TON)</option>
+              <option value="avalanche-2">Avalanche (AVAX)</option>
+              <option value="shiba-inu">Shiba Inu (SHIB)</option>
+              <option value="tron">TRON (TRX)</option>
+              <option value="polkadot">Polkadot (DOT)</option>
+              <option value="chainlink">Chainlink (LINK)</option>
+              <option value="polygon">Polygon (MATIC)</option>
+              <option value="litecoin">Litecoin (LTC)</option>
+              <option value="uniswap">Uniswap (UNI)</option>
+              <option value="internet-computer">Internet Computer (ICP)</option>
+              <option value="bitcoin-cash">Bitcoin Cash (BCH)</option>
+              <option value="stellar">Stellar (XLM)</option>
+            </select>
+            
+          </div>
+          <div class="chart-container">
+            <canvas id="liveChart"></canvas>
+          </div>
+          <div class="price-feed" id="price-feed">Loading price...</div>
+        </div>
+      </section>
+    
+        
+    
+        <div class="tabs">
+          <button class="tablink active" data-tab="crypto">Crypto</button>
+          <button class="tablink" data-tab="forex">Forex</button>
+          <button class="tablink" data-tab="stocks">Stocks</button>
+        </div>
+    
+        <div class="content">
+          <!-- CRYPTO -->
+          <div id="crypto" class="tab active">
+            <div class="card-header">
+              <h3>Crypto Chart</h3>
+              <select id="crypto-selector">
+                <option value="BINANCE:BTCUSDT">Bitcoin (BTC)</option>
+                <option value="BINANCE:ETHUSDT">Ethereum (ETH)</option>
+                <option value="BINANCE:SOLUSDT">Solana (SOL)</option>
+                <option value="BINANCE:XRPUSDT">XRP</option>
+                <option value="BINANCE:BNBUSDT">BNB</option>
+              </select>
+            </div>
+            <div class="widget-box" id="tradingview_crypto"></div>
+          </div>
+        
+          <!-- FOREX -->
+          <div id="forex" class="tab">
+            <div class="card-header">
+              <h3>Forex Chart</h3>
+              <select id="forex-selector">
+                <option value="FX:EURUSD">EUR/USD</option>
+                <option value="FX:GBPUSD">GBP/USD</option>
+                <option value="FX:USDJPY">USD/JPY</option>
+                <option value="FX:AUDUSD">AUD/USD</option>
+                <option value="FX:USDCHF">USD/CHF</option>
+              </select>
+            </div>
+            <div class="widget-box" id="tradingview_forex"></div>
+          </div>
+        
+          <!-- STOCKS -->
+          <div id="stocks" class="tab">
+            <div class="card-header">
+              <h3>Stock Chart</h3>
+              <select id="stock-selector">
+  <option value="NASDAQ:AAPL">Apple (AAPL)</option>
+  <option value="NASDAQ:TSLA">Tesla (TSLA)</option>
+  <option value="NASDAQ:GOOGL">Alphabet (GOOGL)</option>
+  <option value="NASDAQ:AMZN">Amazon (AMZN)</option>
+  <option value="NASDAQ:MSFT">Microsoft (MSFT)</option>
+  <option value="NASDAQ:NVDA">NVIDIA (NVDA)</option>
+  <option value="NASDAQ:META">Meta Platforms (META)</option>
+  <option value="NYSE:BRK.B">Berkshire Hathaway (BRK.B)</option>
+  <option value="NYSE:JNJ">Johnson & Johnson (JNJ)</option>
+  <option value="NYSE:JPM">JPMorgan Chase (JPM)</option>
+  <option value="NYSE:V">Visa (V)</option>
+  <option value="NYSE:WMT">Walmart (WMT)</option>
+  <option value="NYSE:DIS">Walt Disney (DIS)</option>
+  <option value="NYSE:KO">Coca-Cola (KO)</option>
+  <option value="NASDAQ:PEP">PepsiCo (PEP)</option>
+  <option value="NASDAQ:INTC">Intel (INTC)</option>
+  <option value="NASDAQ:ADBE">Adobe (ADBE)</option>
+  <option value="NASDAQ:PYPL">PayPal (PYPL)</option>
+  <option value="NYSE:BA">Boeing (BA)</option>
+  <option value="NASDAQ:AMD">AMD (AMD)</option>
+</select>
+
+              
+            </div>
+            <div class="widget-box" id="tradingview_stocks"></div>
+          </div>
+        </div>
+        
+        </div>
+      </div>
+      
+
+      <script src="https://s3.tradingview.com/tv.js"></script>
+      <script>
+        function showSection(id, element) {
+          document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+          document.getElementById(id).classList.add('active');
+          document.querySelectorAll('nav li').forEach(li => li.classList.remove('active'));
+          if (element) element.classList.add('active');
+        }
+      
+        function toggleSidebar() {
+          document.getElementById('sidebar').classList.toggle('collapsed');
+        }
+      
+        const tabButtons = document.querySelectorAll('.tablink');
+        const tabs = document.querySelectorAll('.tab');
+      
+        tabButtons.forEach(btn => {
+          btn.addEventListener('click', () => {
+            tabButtons.forEach(b => b.classList.remove('active'));
+            tabs.forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(btn.dataset.tab).classList.add('active');
+          });
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+  const selector = document.getElementById('coin-selector');
+  const priceFeed = document.getElementById('price-feed');
+  const ctx = document.getElementById('liveChart').getContext('2d');
+  let chart;
+
+  async function fetchChartData(coinId) {
+    const res = await fetch(`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=1`);
+    const data = await res.json();
+    return {
+      labels: data.prices.map(p => new Date(p[0]).toLocaleTimeString()),
+      prices: data.prices.map(p => p[1])
+    };
+  }
+
+  async function fetchCurrentPrice(coinId) {
+    const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`);
+    const data = await res.json();
+    return data[coinId]?.usd || 0;
+  }
+
+  async function updateChart(coinId) {
+    const { labels, prices } = await fetchChartData(coinId);
+    if (chart) chart.destroy();
+    chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: `${coinId.toUpperCase()} Price (USD)`,
+          data: prices,
+          borderColor: '#22d3ee',
+          backgroundColor: 'rgba(34,211,238,0.1)',
+          fill: true,
+          tension: 0.3,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: { color: '#fff' }
+          }
+        },
+        scales: {
+          x: { ticks: { color: '#94a3b8' }},
+          y: { ticks: { color: '#94a3b8' }}
+        }
+      }
+    });
+  }
+
+  async function updatePriceFeed(coinId) {
+    const price = await fetchCurrentPrice(coinId);
+    priceFeed.textContent = `$${price.toLocaleString()} USD`;
+  }
+
+  async function updateAll(coinId) {
+    await updateChart(coinId);
+    await updatePriceFeed(coinId);
+  }
+
+  // Initial update on page load
+  updateAll(selector.value);
+
+  // Update on coin change
+  selector.addEventListener('change', () => {
+    updateAll(selector.value);
+  });
+
+  // Refresh price feed every 30s
+  setInterval(() => {
+    if (selector.value) updatePriceFeed(selector.value);
+  }, 30000);
+
+  // Handle tab switching
+  const tabButtons = document.querySelectorAll('.tablink');
+  const tabs = document.querySelectorAll('.tab');
+
+  tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      tabButtons.forEach(btn => btn.classList.remove('active'));
+      tabs.forEach(tab => tab.classList.remove('active'));
+
+      button.classList.add('active');
+      document.getElementById(button.dataset.tab).classList.add('active');
+    });
+  });
+});
+function renderTradingViewWidget(containerId, symbol) {
+    new TradingView.widget({
+      container_id: containerId,
+      width: "100%",
+      height: 500,
+      symbol: symbol,
+      interval: "15",
+      timezone: "Etc/UTC",
+      theme: "dark",
+      style: "1",
+      locale: "en",
+      enable_publishing: false,
+      allow_symbol_change: false,
+      hide_side_toolbar: false,
+      withdateranges: true,
+      save_image: false
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const stockSelector = document.getElementById("stock-selector");
+    const stockWidgetContainer = document.getElementById("tradingview_stocks");
+
+    // Load default chart
+    renderTradingViewWidget("tradingview_stocks", stockSelector.value);
+
+    // Update chart on change
+    stockSelector.addEventListener("change", function () {
+      stockWidgetContainer.innerHTML = ""; // Clear previous chart
+      renderTradingViewWidget("tradingview_stocks", this.value); // Load new chart
+    });
+  });
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Initial charts
+  renderTradingViewWidget("tradingview_crypto", "BINANCE:BTCUSDT");
+  renderTradingViewWidget("tradingview_forex", "FX:EURUSD");
+  renderTradingViewWidget("tradingview_stocks", "NASDAQ:AAPL");
+
+  // Dropdown events
+  document.getElementById("crypto-selector").addEventListener("change", function () {
+    document.getElementById("tradingview_crypto").innerHTML = '';
+    renderTradingViewWidget("tradingview_crypto", this.value);
+  });
+
+  document.getElementById("forex-selector").addEventListener("change", function () {
+    document.getElementById("tradingview_forex").innerHTML = '';
+    renderTradingViewWidget("tradingview_forex", this.value);
+  });
+
+  document.getElementById("stock-selector").addEventListener("change", function () {
+    document.getElementById("tradingview_stocks").innerHTML = '';
+    renderTradingViewWidget("tradingview_stocks", this.value);
+  });
+
+  // Tab logic
+  const tabButtons = document.querySelectorAll('.tablink');
+  const tabs = document.querySelectorAll('.tab');
+
+  tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      tabButtons.forEach(btn => btn.classList.remove('active'));
+      tabs.forEach(tab => tab.classList.remove('active'));
+
+      button.classList.add('active');
+      document.getElementById(button.dataset.tab).classList.add('active');
+    });
+  });
+});
+      </script>
+      
+</body>
+</html>

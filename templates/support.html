@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Support | MyCryptoWallet</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f1f5f9;
+      --accent: #fcd535;
+      --error: #ef4444;
+      --shadow: rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--card);
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 1.8rem;
+      color: var(--accent);
+      border-bottom: 1px solid #334155;
+    }
+
+    main {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px var(--shadow);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--accent);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 0.6rem;
+      border: none;
+      border-radius: 6px;
+      margin-top: 0.3rem;
+      font-size: 1rem;
+      background: #334155;
+      color: var(--text);
+    }
+
+    textarea {
+      resize: vertical;
+      height: 100px;
+    }
+
+    .error {
+      color: var(--error);
+      font-size: 0.9rem;
+      margin-top: 0.3rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 1.5rem;
+      border: none;
+      border-radius: 6px;
+      background: var(--accent);
+      color: #000;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #e6c428;
+    }
+  </style>
+</head>
+<body>
+  <header>📩 Support</header>
+  <main>
+    <div class="card">
+      <h2>Contact Support</h2>
+      <form id="supportForm" onsubmit="submitSupport(event)">
+        <label>
+          Name:
+          <input type="text" id="name" required />
+        </label>
+        <label>
+          Email:
+          <input type="email" id="email" required />
+        </label>
+        <label>
+            Agent Name:
+            <input type="agent" id="agent" required />
+          </label>
+        <label>
+          Message:
+          <textarea id="message" required></textarea>
+        </label>
+        <div id="errorMsg" class="error"></div>
+        <button type="submit">Send Message</button>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    function submitSupport(event) {
+      event.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const message = document.getElementById("message").value.trim();
+      const errorMsg = document.getElementById("errorMsg");
+
+      if (!name || !email || !message) {
+        errorMsg.textContent = "All fields are required.";
+        return;
+      }
+
+      if (!email.includes("@") || !email.includes(".")) {
+        errorMsg.textContent = "Please enter a valid email address.";
+        return;
+      }
+
+      errorMsg.textContent = "";
+      alert(`Message sent successfully!\n\nName: ${name}\nEmail: ${email}\nMessage: ${message}`);
+      document.getElementById("supportForm").reset();
+    }
+  </script>
+</body>
+</html>

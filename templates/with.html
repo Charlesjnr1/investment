@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Withdraw | MyCryptoWallet</title>
+  <style>
+    :root {
+      --bg: #0e1626;
+      --card: #1c2a3a;
+      --text: #f2f2f2;
+      --accent: #fcd535;
+      --input: #2c3e50;
+      --hover: #263b50;
+      --danger: #e74c3c;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--card);
+      color: var(--accent);
+      font-size: 1.8rem;
+      font-weight: bold;
+      border-bottom: 1px solid #34495e;
+    }
+    main {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    .card {
+      background: var(--card);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      margin-bottom: 1.5rem;
+      background: var(--input);
+      color: var(--text);
+    }
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      font-weight: bold;
+      background: var(--accent);
+      border: none;
+      color: #000;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #ffd700;
+    }
+    .error {
+      color: var(--danger);
+      margin-top: 1rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>💸 Withdraw Funds</header>
+
+  <main>
+    <section class="card">
+      <label for="wallet">Recipient Wallet Address</label>
+      <input type="text" id="wallet" placeholder="Enter recipient wallet address" />
+
+      <label for="amount">Amount (USD)</label>
+      <input type="number" id="amount" placeholder="Enter amount to withdraw" oninput="calculateBTC()" />
+
+      <label for="rate">BTC Rate (USD)</label>
+      <input type="number" id="rate" value="65000" oninput="calculateBTC()" />
+
+      <button onclick="withdrawFunds()">Send</button>
+
+      <div id="btcValue" style="text-align:center; margin-top:1rem;">You will send: 0 BTC</div>
+      <div id="errorMsg" class="error"></div>
+    </section>
+  </main>
+
+  <script>
+    function calculateBTC() {
+      const usd = parseFloat(document.getElementById("amount").value) || 0;
+      const rate = parseFloat(document.getElementById("rate").value) || 1;
+      const btc = usd / rate;
+      document.getElementById("btcValue").textContent = `You will send: ${btc.toFixed(8)} BTC`;
+    }
+
+    function withdrawFunds() {
+      const wallet = document.getElementById("wallet").value.trim();
+      const usd = parseFloat(document.getElementById("amount").value);
+      const error = document.getElementById("errorMsg");
+      error.textContent = "";
+
+      if (!wallet || usd <= 0) {
+        error.textContent = "Please enter a valid wallet address and amount.";
+        return;
+      }
+
+      const btc = (usd / (parseFloat(document.getElementById("rate").value) || 1)).toFixed(8);
+      alert(`✅ Withdrawal submitted!\n\nTo: ${wallet}\nAmount: $${usd}\nBTC: ${btc}`);
+    }
+
+    calculateBTC(); // initialize
+  </script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tools | MyCryptoWallet</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f1f5f9;
+      --accent: #fcd535;
+      --shadow: rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--card);
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 1.8rem;
+      color: var(--accent);
+      border-bottom: 1px solid #334155;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px var(--shadow);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--accent);
+    }
+
+    .tools-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .tool-box {
+      background: #1c2a3a;
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+      flex: 1 1 200px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .tool-box:hover {
+      background: #263a4e;
+    }
+
+    .tool-box span {
+      display: block;
+      margin-top: 0.5rem;
+      font-weight: bold;
+      color: #e2e8f0;
+    }
+
+    #qrcode {
+      display: flex;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 0.6rem;
+      border: none;
+      border-radius: 6px;
+      margin-top: 1rem;
+      outline: none;
+    }
+
+    @media (max-width: 600px) {
+      .tools-grid {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>🛠️ Tools & Utilities</header>
+  <main>
+    <div class="card">
+      <h2>Wallet Utilities</h2>
+      <div class="tools-grid">
+        <div class="tool-box" onclick="generateQR()">🔳 <span>QR Generator</span></div>
+        <div class="tool-box" onclick="alert('2FA Setup Coming Soon')">🛡️ <span>2FA Setup</span></div>
+        <div class="tool-box" onclick="alert('Gas Estimator Coming Soon')">⛽ <span>Gas Estimator</span></div>
+      </div>
+
+      <input type="text" id="qrInput" placeholder="Enter text or wallet address for QR">
+      <div id="qrcode"></div>
+    </div>
+  </main>
+
+  <script>
+    function generateQR() {
+      const input = document.getElementById("qrInput").value || "0xABC123456789DEF";
+      const container = document.getElementById("qrcode");
+      container.innerHTML = "";
+      QRCode.toCanvas(input, { width: 200, margin: 2 }, (err, canvas) => {
+        if (!err) container.appendChild(canvas);
+        else alert("QR Generation Failed");
+      });
+    }
+  </script>
+</body>
+</html>

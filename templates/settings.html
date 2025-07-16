@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Settings | MyCryptoWallet</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f1f5f9;
+      --accent: #fcd535;
+      --shadow: rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--card);
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 1.8rem;
+      color: var(--accent);
+      border-bottom: 1px solid #334155;
+    }
+
+    main {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px var(--shadow);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--accent);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      padding: 0.6rem;
+      border: none;
+      border-radius: 6px;
+      margin-top: 0.3rem;
+      font-size: 1rem;
+      background: #334155;
+      color: var(--text);
+    }
+
+    .toggle-group {
+      margin: 1rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .toggle-group span {
+      font-weight: bold;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 1.5rem;
+      border: none;
+      border-radius: 6px;
+      background: var(--accent);
+      color: #000;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #e6c428;
+    }
+  </style>
+</head>
+<body>
+  <header>⚙️ Account Settings</header>
+  <input type="file" name="profile_pic" id="profile_pic" accept="image/*" />
+<img id="profilePreview" class="profile-preview" />
+
+    
+    <label>
+      Username:
+      <input type="text" name="username" value="CryptoUser" />
+    </label>
+  
+    <label>
+      Email:
+      <input type="email" name="email" value="user@example.com" />
+    </label>
+  
+    <div class="toggle-group">
+      <span>Dark Mode</span>
+      <input type="checkbox" name="theme" value="dark" checked />
+    </div>
+  
+    <button type="submit">Save Settings</button>
+  </form>
+  
+
+  <script>
+    function saveSettings() {
+      const username = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const theme = document.getElementById("themeToggle").checked;
+
+      alert(`Settings saved:\nUsername: ${username}\nEmail: ${email}\nDark Mode: ${theme ? 'On' : 'Off'}`);
+    }
+    document.getElementById('profile_pic').addEventListener('change', function () {
+    const file = this.files[0];
+    const preview = document.getElementById('profilePreview');
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        preview.src = e.target.result;
+        preview.style.width = '100px';
+        preview.style.height = '100px';
+        preview.style.borderRadius = '50%';
+        preview.style.objectFit = 'cover';
+        preview.style.marginTop = '10px';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+  </script>
+</body>
+</html>

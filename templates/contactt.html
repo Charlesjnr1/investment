@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Contact Support</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #eef2f5; }
+    .form-container {
+      max-width: 500px; margin: auto; background: white; padding: 20px;
+      border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 { text-align: center; }
+    label { display: block; margin-top: 15px; }
+    input, textarea {
+      width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;
+    }
+    button {
+      margin-top: 15px; padding: 10px; width: 100%;
+      background: #007bff; color: white; border: none; border-radius: 5px;
+    }
+    .msg { color: green; text-align: center; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Contact Support</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <p class="msg">{{ message }}</p>
+      {% endfor %}
+    {% endwith %}
+    <form method="POST">
+      <label>Name</label>
+      <input type="text" name="name" required>
+      <label>Email</label>
+      <input type="email" name="email" required>
+      <label>Message</label>
+      <textarea name="message" rows="5" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </div>
+</body>
+</html>

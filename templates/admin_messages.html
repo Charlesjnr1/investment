@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin - Messages</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f9f9f9; }
+    h2 { text-align: center; }
+    .message {
+      background: white; padding: 15px; margin-bottom: 15px;
+      border-left: 5px solid #007bff; border-radius: 5px;
+    }
+    .reply {
+      background: #e9f7ef; padding: 10px; border-radius: 5px;
+      margin-top: 5px;
+    }
+    .btn {
+      display: inline-block; padding: 6px 12px; background: #28a745;
+      color: white; border-radius: 5px; text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h2>User Messages</h2>
+  {% for msg in messages %}
+    <div class="message">
+      <p><strong>{{ msg['name'] }}</strong> ({{ msg['email'] }})</p>
+      <p>{{ msg['content'] }}</p>
+      {% if msg.get('reply') %}
+        <div class="reply"><strong>Admin Reply:</strong> {{ msg['reply'] }}</div>
+      {% else %}
+        <a href="{{ url_for('reply_message', msg_id=msg['_id']) }}" class="btn">Reply</a>
+      {% endif %}
+    </div>
+  {% else %}
+    <p>No messages yet.</p>
+  {% endfor %}
+</body>
+</html>

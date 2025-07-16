@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Deposit | MyCryptoWallet</title>
+  <style>
+    :root {
+      --bg: #0d1524;
+      --card: #172b44;
+      --text: #e0f1ff;
+      --accent: #fcd535;
+      --hover: #1e365a;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      background: var(--card);
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--accent);
+      border-bottom: 1px solid #233b59;
+    }
+    main {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    .card {
+      background: var(--card);
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    label, select, input {
+      display: block;
+      margin-bottom: 1rem;
+      width: 100%;
+    }
+    .send-btn {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #10b981; /* Emerald */
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.send-btn:hover {
+  background-color: #059669;
+}
+
+    select, input {
+      padding: 0.7rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      background: var(--hover);
+      color: var(--text);
+    }
+    .approval-msg {
+  margin-top: 1rem;
+  color: #f59e0b; /* Amber warning */
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+    .wallet-box {
+      background: var(--hover);
+      padding: 1rem;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+    }
+    .wallet-box input {
+      border: none;
+      background: transparent;
+      color: var(--accent);
+      width: 100%;
+    }
+    .wallet-box button {
+      background: var(--accent);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-left: 1rem;
+      color: #000;
+    }
+    #qrcode {
+      margin-top: 1rem;
+      text-align: center;
+    }
+    @media (max-width: 600px) {
+      .wallet-box {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+    <header>💰 Deposit Crypto</header>
+    <main>
+      <section class="card">
+        <label for="coin">Select Coin</label>
+        <select id="coin" onchange="updateDeposit()">
+          <option value="USDT">Tether (USDT)</option>
+        </select>
+    
+        <label>Wallet Address</label>
+        <div class="wallet-box">
+          <input type="text" id="walletAddress" readonly />
+          <button onclick="copyAddress()">📋 Copy</button>
+        </div>
+    
+        <div id="qrcode"></div>
+    
+        <!-- 🔘 Send Button -->
+        <button onclick="sendCrypto()" id="sendButton" class="send-btn">🚀 Sent</button>
+<p id="approvalMessage" class="approval-msg" style="display: none;">⏳ Please wait... Your deposit request is being reviewed.</p>
+
+      </section>
+    </main>
+    
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script>
+    const walletAddresses = {
+      USDT: "TNzG8FjMgZ3UuDJiyR9RB3aERByg9HNj5S"
+    };
+
+    function updateDeposit() {
+      const coin = document.getElementById("coin").value;
+      const address = walletAddresses[coin];
+      document.getElementById("walletAddress").value = address;
+
+      const qrBox = document.getElementById("qrcode");
+      qrBox.innerHTML = "";
+      QRCode.toCanvas(address, { width: 200 }, function (err, canvas) {
+        if (!err) qrBox.appendChild(canvas);
+      });
+    }
+    function sendCrypto() {
+    const button = document.getElementById("sendButton");
+    const message = document.getElementById("approvalMessage");
+
+    // Change button text and disable it
+    button.textContent = "⏳ Waiting for approval...";
+    button.disabled = true;
+
+    // Show approval message
+    message.style.display = "block";
+  }
+
+    function copyAddress() {
+      const input = document.getElementById("walletAddress");
+      input.select();
+      navigator.clipboard.writeText(input.value).then(() => {
+        alert("Wallet address copied to clipboard!");
+      });
+    }
+
+    // Initialize on load
+    updateDeposit();
+  </script>
+</body>
+</html>

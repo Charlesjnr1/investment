@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mining | MyCryptoWallet</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f8fafc;
+      --accent: #22c55e;
+      --danger: #ef4444;
+      --shadow: rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--card);
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 1.8rem;
+      color: var(--accent);
+      border-bottom: 1px solid #334155;
+    }
+
+    main {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 8px 16px var(--shadow);
+      text-align: center;
+    }
+
+    .status {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .hashrate {
+      font-size: 2rem;
+      margin: 1rem 0;
+      font-weight: bold;
+    }
+
+    .btn {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #16a34a;
+    }
+
+    .stopped {
+      color: var(--danger);
+    }
+  </style>
+</head>
+<body>
+  <header>⛏️ Mining Dashboard</header>
+  <main>
+    <div class="card">
+      <div class="status" id="miningStatus">Status: <span class="stopped">Stopped</span></div>
+      <div class="hashrate" id="hashrate">Hashrate: 0 MH/s</div>
+      <button class="btn" id="toggleBtn" onclick="toggleMining()">Start Mining</button>
+    </div>
+  </main>
+
+  <script>
+    let isMining = false;
+    let hashrateEl = document.getElementById("hashrate");
+    let statusEl = document.getElementById("miningStatus");
+    let toggleBtn = document.getElementById("toggleBtn");
+    let miningInterval;
+
+    function toggleMining() {
+      isMining = !isMining;
+
+      if (isMining) {
+        toggleBtn.textContent = "Stop Mining";
+        statusEl.innerHTML = 'Status: <span style="color:limegreen">Active</span>';
+        startSimulatedMining();
+      } else {
+        toggleBtn.textContent = "Start Mining";
+        statusEl.innerHTML = 'Status: <span class="stopped">Stopped</span>';
+        stopSimulatedMining();
+      }
+    }
+
+    function startSimulatedMining() {
+      miningInterval = setInterval(() => {
+        const fakeHashrate = (Math.random() * 150 + 50).toFixed(2);
+        hashrateEl.textContent = `Hashrate: ${fakeHashrate} MH/s`;
+      }, 1000);
+    }
+
+    function stopSimulatedMining() {
+      clearInterval(miningInterval);
+      hashrateEl.textContent = "Hashrate: 0 MH/s";
+    }
+  </script>
+</body>
+</html>

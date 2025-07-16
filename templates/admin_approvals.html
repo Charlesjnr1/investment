@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Approvals</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 25px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+
+    th {
+      background-color: #333;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .btn {
+      padding: 6px 12px;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 14px;
+      color: white;
+    }
+
+    .btn-approve {
+      background-color: #28a745;
+    }
+
+    .btn-reject {
+      background-color: #dc3545;
+    }
+
+    .flash-message {
+      padding: 10px;
+      margin-bottom: 15px;
+      border-left: 5px solid;
+    }
+
+    .success {
+      background-color: #d4edda;
+      border-color: #28a745;
+    }
+
+    .danger {
+      background-color: #f8d7da;
+      border-color: #dc3545;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Pending User Approvals</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-message {{ category }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <table>
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{ user['_id'] }}</td>
+          <td>{{ user['username'] }}</td>
+          <td>{{ user['email'] }}</td>
+          <td>{{ user['status'] }}</td>
+          <td>
+            <a href="{{ url_for('approve_user', user_id=user['_id']) }}" class="btn btn-approve">Approve</a>
+            <a href="{{ url_for('reject_user', user_id=user['_id']) }}" class="btn btn-reject">Reject</a>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5" style="text-align: center;">No pending users</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <a href="{{ url_for('admin_dashboard') }}">← Back to Dashboard</a>
+  </div>
+</body>
+</html>

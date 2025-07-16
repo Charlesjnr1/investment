@@ -1,0 +1,138 @@
+<!-- templates/user_dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard | MyCryptoWallet</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f1f5f9;
+      --accent: #fcd535;
+      --hover: #334155;
+      --shadow: rgba(0, 0, 0, 0.3);
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    header {
+      background: var(--card);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--hover);
+    }
+    header .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--accent);
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      padding: 0;
+      margin: 0;
+    }
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    nav a:hover, nav .active a {
+      color: var(--accent);
+      font-weight: bold;
+    }
+    main {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .card {
+      background: var(--card);
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px var(--shadow);
+      margin-bottom: 2rem;
+    }
+    .card h2 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .balance {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--text);
+    }
+    .quick-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+    .action {
+      flex: 1 1 200px;
+      background: var(--hover);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .action:hover {
+      background: var(--accent);
+      color: #000;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      color: #94a3b8;
+      border-top: 1px solid var(--hover);
+      background: var(--card);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">💰 HalalVest</div>
+    <nav>
+      <ul>
+        <li class="active"><a href="{{ url_for('dashboard_alt') }}">Dashboard</a><li>
+        <li><a href="{{ url_for('assets') }}">Assets</a></li>
+        <li><a href="{{ url_for('deposit') }}">Deposit</a></li>
+        <li><a href="{{ url_for('buy') }}">Buy Bitcoin</a></li>
+        <li><a href="{{ url_for('withdraw') }}">Withdrawal</a></li>
+        <li><a href="{{ url_for('mining') }}">Mining</a></li>
+        <li><a href="{{ url_for('portfolio') }}">Portfolio</a></li>
+        <li><a href="{{ url_for('transactions') }}">Transactions</a></li>
+        <li><a href="{{ url_for('tools') }}">Tools</a></li>
+        <li><a href="{{ url_for('settings') }}">Settings</a></li>
+        <li><a href="{{ url_for('support') }}">Support</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Wallet Balance</h2>
+      <div class="balance">${{ "{:,.2f}".format(user_balance) }}</div>
+    </div>
+
+    <div class="card">
+      <h2>Quick Actions</h2>
+      <div class="quick-actions">
+        <div class="action" onclick="location.href='{{ url_for('deposit') }}'">💳 Deposit</div>
+        <div class="action" onclick="location.href='{{ url_for('buy') }}'">🛒 Buy Crypto</div>
+        <div class="action" onclick="location.href='{{ url_for('withdraw') }}'">📤 Withdraw</div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

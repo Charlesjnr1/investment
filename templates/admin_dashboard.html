@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    header {
+      background-color: #1e1e2f;
+      color: white;
+      padding: 15px 30px;
+      text-align: center;
+    }
+    nav {
+      background-color: #2e2e3f;
+      width: 220px;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding-top: 60px;
+      color: white;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+    nav ul li {
+      padding: 15px 20px;
+      border-bottom: 1px solid #444;
+    }
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      display: block;
+    }
+    main {
+      margin-left: 240px;
+      padding: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #f5f5f5;
+    }
+    .actions a {
+      margin-right: 10px;
+      text-decoration: none;
+      color: #007bff;
+    }
+    .actions a:hover {
+      text-decoration: underline;
+    }
+    .logout {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Admin Dashboard</h1>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
+      <li><a href="{{ url_for('admin_users') }}"><i class="fas fa-users"></i> Manage Users</a></li>
+      <li><a href="{{ url_for('admin_approvals') }}"><i class="fas fa-user-check"></i> Approvals</a></li>
+      <li><a href="{{ url_for('admin_messages') }}"><i class="fas fa-envelope"></i> Messages</a></li>
+      <li><a href="{{ url_for('admin_settings') }}"><i class="fas fa-cog"></i> Settings</a></li>
+      <li class="logout"><a href="{{ url_for('admin_logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <h2>All Registered Users</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Username</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.role }}</td>
+          <td class="actions">
+            <a href="{{ url_for('view_user', user_id=user._id) }}">View</a>
+            <a href="{{ url_for('edit_user', user_id=user._id) }}">Edit</a>
+            <a href="{{ url_for('delete_user', user_id=user._id) }}" onclick="return confirm('Delete user?')">Delete</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>
