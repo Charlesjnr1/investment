@@ -62,17 +62,26 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        user = mongo.db.users.find_one({'email': email})
+        print(f"[DEBUG] Login attempt: {email}")
 
-        if user and check_password_hash(user['password'], password):
-            session['user'] = user['email']
-            flash('Login successful', 'success')
-            return redirect(url_for('wallet'))
+        user = mongo.db.users.find_one({'email': email})
+        if user:
+            print("[DEBUG] User found:", user['email'])
+            if check_password_hash(user['password'], password):
+                print("[DEBUG] Password matched.")
+                session['user'] = user['email']
+                flash('Login successful', 'success')
+                return redirect(url_for('wallet'))
+            else:
+                print("[DEBUG] Password mismatch.")
         else:
-            flash('Invalid email or password', 'error')
-            return redirect(url_for('login'))
-    
+            print("[DEBUG] User not found.")
+        
+        flash('Invalid email or password', 'error')
+        return redirect(url_for('login'))
+
     return render_template('login.html')
+
 
 
 @app.route('/wallet')
