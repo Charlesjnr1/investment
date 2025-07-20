@@ -78,12 +78,11 @@ def login():
 @app.route('/wallet')
 def wallet():
     if 'user' not in session:
-        flash("Please login.")
+        flash('Please log in first', 'warning')
         return redirect(url_for('login'))
-
-    # Get user from the database using session
-    user = mongo.db.users.find_one({'email': session['user']})
     
+    # Fetch user from DB if needed
+    user = mongo.db.users.find_one({'email': session['user']})
     return render_template('wallet.html', user=user)
 
 
