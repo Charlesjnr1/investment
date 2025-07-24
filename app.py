@@ -90,7 +90,7 @@ def wallet():
 
 
 @app.route('/dashboardd')
-def dashboard_alt():
+def dashboard():
     if 'user' not in session:
         flash("Please login.", "warning")
         return redirect(url_for('login'))
