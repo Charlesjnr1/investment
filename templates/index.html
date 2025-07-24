@@ -77,10 +77,9 @@
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu shadow-sm m-0">
-                        >
-                        <a href="{{ url_for('#token') }}" class="dropdown-item">Token Sale</a>
-                        <a href="{{ url_for('#faq') }}" class="dropdown-item">FAQs</a>
-                        
+                      <a href="{{ url_for('feature') }}" class="dropdown-item">Feature</a>
+                        <a href="{{ url_for('token') }}" class="dropdown-item">Token Sale</a>
+                        <a href="{{ url_for('faq') }}" class="dropdown-item">FAQs</a>
                     </div>
                 </div>
                 <a href="{{ url_for('contact') }}" class="nav-item nav-link">Contact</a>
