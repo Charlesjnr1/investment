@@ -56,13 +56,13 @@ def register():
         flash("Account created! Awaiting approval.", "success")
         return redirect(url_for('login'))
     return render_template('register.html')
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        user = mongo.db.users.find_one({'email': email})
+        
+        user = mongo.db.users.find_one({'email': email, 'approved': True})  # Only allow approved users
 
         if user and check_password_hash(user['password'], password):
             session['user'] = user['email']
