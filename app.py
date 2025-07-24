@@ -62,7 +62,8 @@ def login():
         email = request.form['email']
         password = request.form['password']
         
-        user = mongo.db.users.find_one({'email': email, 'approved': True})  # Only allow approved users
+        # Check for status field, not "approved"
+        user = mongo.db.users.find_one({'email': email, 'status': 'approved'})
 
         if user and check_password_hash(user['password'], password):
             session['user'] = user['email']
@@ -71,8 +72,9 @@ def login():
         else:
             flash('Invalid email or password', 'error')
             return redirect(url_for('login'))
-    
+
     return render_template('login.html')
+
 
 
 @app.route('/wallet')
