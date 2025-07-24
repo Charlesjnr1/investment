@@ -294,7 +294,7 @@ def send_email_reply(to_email, content):
 
 # ------------------ Other Routes -------------------
 # Home Page
-@app.route('/')
+@app.route('/home')
 def index():
     return render_template('index.html')
 
