@@ -26,8 +26,10 @@ def allowed_file(filename):
 # ------------------ Home & User Routes -------------------
 
 @app.route('/')
+@app.route('/home')
 def index():
     return render_template('index.html')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -293,10 +295,7 @@ def send_email_reply(to_email, content):
         smtp.send_message(msg)
 
 # ------------------ Other Routes -------------------
-# Home Page
-@app.route('/home')
-def index():
-    return render_template('index.html')
+
 
 # About Page
 @app.route('/about')
