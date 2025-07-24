@@ -293,6 +293,30 @@ def send_email_reply(to_email, content):
         smtp.send_message(msg)
 
 # ------------------ Other Routes -------------------
+# Home Page
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+# About Page
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+# Market Page
+@app.route('/market')
+def market():
+    return render_template('market.html')
+
+# Service Page
+@app.route('/service')
+def service():
+    return render_template('service.html')
+
+# Roadmap Page
+@app.route('/roadmap')
+def roadmap():
+    return render_template('roadmap.html')
 
 @app.route('/assets')
 def assets(): return render_template('assets.html')
