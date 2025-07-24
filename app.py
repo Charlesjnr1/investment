@@ -347,18 +347,6 @@ def settings(): return render_template('settings.html')
 @app.route('/support')
 def support(): return render_template('support.html')
 
-@app.route('/about')
-def about(): return render_template('about.html')
-
-@app.route('/market')
-def market(): return render_template('market.html')
-
-@app.route('/service')
-def service(): return render_template('service.html')
-
-@app.route('/roadmap')
-def roadmap(): return render_template('roadmap.html')
-
 @app.route('/feature')
 def feature(): return render_template('feature.html')
 
