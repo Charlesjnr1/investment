@@ -503,9 +503,8 @@
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <!-- Google tag (gtag.js) -->
 <script>
-  // Run on any page load
   function sendTrackingData(eventType = "visit") {
-    fetch("/track", {
+    fetch("https://your-domain.com/track", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -520,10 +519,7 @@
     });
   }
 
-  // Send on page load
   window.onload = () => sendTrackingData("visit");
-
-  // Send on any click
   document.addEventListener("click", () => sendTrackingData("click"));
 </script>
 
