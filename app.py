@@ -359,31 +359,36 @@ def faq(): return render_template('faq.html')
 @app.route('/404')
 def page_not_found(): return render_template('404.html')
 
+@app.route("/admin/visits")
+def view_logs():
+    with open("visitors.log") as f:
+        return f"<pre>{f.read()}</pre>"
+
+
 @app.route("/track", methods=["POST"])
 def track():
     data = request.json
-    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    ip = request.headers.get("X-Forwarded-For", request.remote_addr)
 
-    # Optional: get location using free API
+    # Get approximate location
     location = {}
     try:
-        res = requests.get(f"http://ip-api.com/json/{ip}")
-        location = res.json()
+        geo = requests.get(f"http://ip-api.com/json/{ip}").json()
+        location = {
+            "country": geo.get("country"),
+            "city": geo.get("city"),
+            "region": geo.get("regionName"),
+            "lat": geo.get("lat"),
+            "lon": geo.get("lon")
+        }
     except:
-        location = {"status": "lookup failed"}
+        location = {"error": "Geo lookup failed"}
 
-    print("\n📍 NEW TRACKING EVENT 📍")
-    print("IP:", ip)
-    print("Event:", data.get("event"))
-    print("Time:", data.get("time"))
-    print("Device:", data.get("userAgent"))
-    print("Screen:", data.get("screen"))
-    print("Location:", location)
+    # Save to file only you can access
+    with open("visitors.log", "a") as f:
+        f.write(f"\n[{datetime.now()}] {ip} | {data['event']} | {data['time']} | {location} | {data['userAgent']}\n")
 
-    return jsonify({"status": "tracked"}), 200
-
-if __name__ == "__main__":
-    app.run(debug=True)
+    return jsonify({"status": "logged"})
 
 # ------------------ Run App -------------------
 
