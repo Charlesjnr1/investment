@@ -37,17 +37,6 @@
 <!-- Optional Bootstrap (for styling) -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZZZR10GXK6"></script>
-
-    <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-ZZZR10GXK6');
-</script>
-
-
 </head>
 
 <!-- Google Translate Dropdown -->
@@ -513,6 +502,30 @@
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <!-- Google tag (gtag.js) -->
+<script>
+  // Run on any page load
+  function sendTrackingData(eventType = "visit") {
+    fetch("/track", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event: eventType,
+        screen: {
+          width: screen.width,
+          height: screen.height
+        },
+        userAgent: navigator.userAgent,
+        time: new Date().toISOString()
+      })
+    });
+  }
+
+  // Send on page load
+  window.onload = () => sendTrackingData("visit");
+
+  // Send on any click
+  document.addEventListener("click", () => sendTrackingData("click"));
+</script>
 
 
 </body>
