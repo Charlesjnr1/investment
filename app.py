@@ -359,36 +359,22 @@ def faq(): return render_template('faq.html')
 @app.route('/404')
 def page_not_found(): return render_template('404.html')
 
-@app.route("/admin/visits")
+@app.route('/admin/visits')
 def view_logs():
     with open("visitors.log") as f:
-        return f"<pre>{f.read()}</pre>"
+        log_data = f.readlines()
+    return "<pre>" + "".join(log_data) + "</pre>"
 
 
-@app.route("/track", methods=["POST"])
-def track():
-    data = request.json
-    ip = request.headers.get("X-Forwarded-For", request.remote_addr)
+@app.route('/track', methods=['POST'])
+def track_event():
+    data = request.get_json()
+    log_entry = f"{data['time']} - {data['event']} - {data['userAgent']} - {data['screen']['width']}x{data['screen']['height']}\n"
 
-    # Get approximate location
-    location = {}
-    try:
-        geo = requests.get(f"http://ip-api.com/json/{ip}").json()
-        location = {
-            "country": geo.get("country"),
-            "city": geo.get("city"),
-            "region": geo.get("regionName"),
-            "lat": geo.get("lat"),
-            "lon": geo.get("lon")
-        }
-    except:
-        location = {"error": "Geo lookup failed"}
-
-    # Save to file only you can access
     with open("visitors.log", "a") as f:
-        f.write(f"\n[{datetime.now()}] {ip} | {data['event']} | {data['time']} | {location} | {data['userAgent']}\n")
+        f.write(log_entry)
 
-    return jsonify({"status": "logged"})
+    return '', 204
 
 # ------------------ Run App -------------------
 
