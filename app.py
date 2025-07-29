@@ -359,6 +359,32 @@ def faq(): return render_template('faq.html')
 @app.route('/404')
 def page_not_found(): return render_template('404.html')
 
+@app.route("/track", methods=["POST"])
+def track():
+    data = request.json
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+
+    # Optional: get location using free API
+    location = {}
+    try:
+        res = requests.get(f"http://ip-api.com/json/{ip}")
+        location = res.json()
+    except:
+        location = {"status": "lookup failed"}
+
+    print("\n📍 NEW TRACKING EVENT 📍")
+    print("IP:", ip)
+    print("Event:", data.get("event"))
+    print("Time:", data.get("time"))
+    print("Device:", data.get("userAgent"))
+    print("Screen:", data.get("screen"))
+    print("Location:", location)
+
+    return jsonify({"status": "tracked"}), 200
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
 # ------------------ Run App -------------------
 
 if __name__ == '__main__':
