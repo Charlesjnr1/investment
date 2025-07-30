@@ -369,7 +369,21 @@ def view_logs():
 @app.route('/track', methods=['POST'])
 def track_event():
     data = request.get_json()
-    log_entry = f"{data['time']} - {data['event']} - {data['userAgent']} - {data['screen']['width']}x{data['screen']['height']}\n"
+
+    # Get user IP (handles proxies)
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+
+    # Get location info from ipapi.co (free for basic usage)
+    try:
+        geo = requests.get(f'https://ipapi.co/{ip}/json/').json()
+        location = f"{geo.get('city', 'Unknown')}, {geo.get('region', '')}, {geo.get('country_name', 'Unknown')}"
+    except Exception as e:
+        location = "Unknown"
+
+    log_entry = (
+        f"{data['time']} - {data['event']} - {data['userAgent']} - "
+        f"{data['screen']['width']}x{data['screen']['height']} - IP: {ip} - Location: {location}\n"
+    )
 
     with open("visitors.log", "a") as f:
         f.write(log_entry)
